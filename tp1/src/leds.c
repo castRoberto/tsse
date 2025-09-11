@@ -69,7 +69,7 @@ static bool ISLedValid (int led) {
 void LedsInitDriver (uint16_t* port) {
 
   _port = port;
-  *_port = LEDS_ALL_OFF; // Apago todos los leds
+  LedsTurnOffAll ();
 
 }
 
@@ -95,6 +95,13 @@ void LedsTurnOff (int led) {
 void LedsTurnOnAll (void) {
 
   *_port = ~LEDS_ALL_OFF;
+
+}
+
+
+void LedsTurnOffAll (void) {
+
+  *_port = LEDS_ALL_OFF;
 
 }
 

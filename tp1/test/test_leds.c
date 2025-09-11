@@ -138,6 +138,15 @@ void test_prender_todos_los_leds () {
 
 }
 
+
+void test_apagar_todos_los_leds () {
+
+  LedsTurnOnAll ();
+  LedsTurnOffAll ();
+  TEST_ASSERT_EQUAL_HEX16 (0x0000, port);
+
+}
+
 /* === End of documentation ==================================================================== */
 
 /** @} End of module definition for doxygen */
