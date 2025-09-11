@@ -60,6 +60,13 @@ void LedsTurnOn (int led) {
 
 }
 
+
+void LedsTurnOff (int led) {
+
+  *_port = 0x0000;
+
+}
+
 /* === End of documentation ==================================================================== */
 
 /** @} End of module definition for doxygen */

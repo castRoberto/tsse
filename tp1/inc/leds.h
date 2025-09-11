@@ -51,6 +51,8 @@ void LedsInitDriver (uint16_t* port);
 
 void LedsTurnOn (int led);
 
+void LedsTurnOff (int led);
+
 /* === End of documentation ==================================================================== */
 
 #ifdef __cplusplus
