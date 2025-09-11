@@ -117,6 +117,19 @@ void test_encender_un_led_fuera_de_rango_y_comprobar_que_se_genera_un_error (voi
 
 }
 
+
+void test_apagar_un_led_fuera_de_rango_y_comprobar_que_se_genera_un_error (void) {
+
+  RegistrarMensaje_ExpectAnyArgs ();
+  LedsTurnOff (0);
+  TEST_ASSERT_EQUAL_HEX16 (0x0000, port);
+
+  RegistrarMensaje_ExpectAnyArgs ();
+  LedsTurnOff (17);
+  TEST_ASSERT_EQUAL_HEX16 (0x0000, port);
+
+}
+
 /* === End of documentation ==================================================================== */
 
 /** @} End of module definition for doxygen */

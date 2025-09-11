@@ -29,6 +29,8 @@ SPDX-License-Identifier: MIT
 #include "leds.h"
 #include "errores.h"
 
+#include <stdbool.h>
+
 /* === Macros definitions ====================================================================== */
 
 #define LEDS_ALL_OFF 0x0000
@@ -45,6 +47,15 @@ static uint16_t* _port; // Direccion del puerto virtual
 
 static uint16_t LedsToMask (int led) {
   return FIRST_BIT << (led - LED_TO_BIT_OFFSET);
+}
+
+
+static bool ISLedValid (int led) {
+  bool result = led >= 1 && led <= 16;
+  if (!result) {
+    Alerta ("El led no es valido");
+  }
+  return result;
 }
 
 /* === Public variable definitions ============================================================= */
@@ -65,10 +76,7 @@ void LedsInitDriver (uint16_t* port) {
 
 void LedsTurnOn (int led) {
 
-  if (led < 1 || led > 16) {
-    Alerta ("El led no es valido");
-    return;
-  }
+  if (!ISLedValid (led)) return; // Evito que se apague un led invalido
 
   *_port |= LedsToMask (led);
 
@@ -76,6 +84,8 @@ void LedsTurnOn (int led) {
 
 
 void LedsTurnOff (int led) {
+
+  if (!ISLedValid (led)) return; // Evito que se apague un led invalido
 
   *_port &= ~LedsToMask (led);
 
