@@ -36,6 +36,8 @@ SPDX-License-Identifier: MIT
 #define LEDS_ALL_OFF 0x0000
 #define FIRST_BIT 1
 #define LED_TO_BIT_OFFSET 1
+#define LEDS_PRIMER_LED 1
+#define LEDS_ULTIMO_LED 16
 
 /* === Private data type declarations ========================================================== */
 
@@ -51,11 +53,16 @@ static uint16_t LedsToMask (int led) {
 
 
 static bool ISLedValid (int led) {
-  bool result = led >= 1 && led <= 16;
+  bool result = led >= LEDS_PRIMER_LED && led <= LEDS_ULTIMO_LED;
   if (!result) {
     Alerta ("El led no es valido");
   }
   return result;
+}
+
+
+static bool LedsRawState (int led) {
+  return (*_port & LedsToMask (led)) != LEDS_ALL_OFF;
 }
 
 /* === Public variable definitions ============================================================= */
@@ -108,18 +115,16 @@ void LedsTurnOffAll (void) {
 
 bool LedsIsOn (int led) {
 
-  if (!ISLedValid (led)) return false; // Evito que se consulte un led invalido
-
-  return (*_port & LedsToMask (led)) != 0;
+  if (!ISLedValid (led)) return false; // Un led invalido se considera apagado
+  return LedsRawState(led);
 
 }
 
 
 bool LedsIsOff (int led) {
 
-  if (!ISLedValid (led)) return false; // Evito que se consulte un led invalido
-
-  return (*_port & LedsToMask (led)) == 0;
+  if (!ISLedValid (led)) return false; // Un led invalido se considera apagado
+  return LedsRawState(led) == false;
 
 }
 
