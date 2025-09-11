@@ -130,6 +130,14 @@ void test_apagar_un_led_fuera_de_rango_y_comprobar_que_se_genera_un_error (void)
 
 }
 
+
+void test_prender_todos_los_leds () {
+
+  LedsTurnOnAll ();
+  TEST_ASSERT_EQUAL_HEX16 (0xFFFF, port);
+
+}
+
 /* === End of documentation ==================================================================== */
 
 /** @} End of module definition for doxygen */

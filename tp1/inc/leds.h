@@ -53,6 +53,8 @@ void LedsTurnOn (int led);
 
 void LedsTurnOff (int led);
 
+void LedsTurnOnAll (void);
+
 /* === End of documentation ==================================================================== */
 
 #ifdef __cplusplus

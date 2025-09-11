@@ -91,6 +91,13 @@ void LedsTurnOff (int led) {
 
 }
 
+
+void LedsTurnOnAll (void) {
+
+  *_port = ~LEDS_ALL_OFF;
+
+}
+
 /* === End of documentation ==================================================================== */
 
 /** @} End of module definition for doxygen */
