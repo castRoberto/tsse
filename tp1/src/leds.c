@@ -27,6 +27,7 @@ SPDX-License-Identifier: MIT
 
 /* === Headers files inclusions =============================================================== */
 #include "leds.h"
+#include "errores.h"
 
 /* === Macros definitions ====================================================================== */
 
@@ -63,6 +64,11 @@ void LedsInitDriver (uint16_t* port) {
 
 
 void LedsTurnOn (int led) {
+
+  if (led < 1 || led > 16) {
+    Alerta ("El led no es valido");
+    return;
+  }
 
   *_port |= LedsToMask (led);
 

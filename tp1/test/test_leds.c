@@ -33,6 +33,8 @@ SPDX-License-Identifier: MIT
 /* === Headers files inclusions =============================================================== */
 #include "unity.h"
 #include "leds.h"
+#include "errores.h"
+#include "mock_errores.h"
 
 /* === Macros definitions ====================================================================== */
 
@@ -96,6 +98,22 @@ void test_prender_mas_de_un_led_apagar_uno_y_verificar_que_el_resto_siguen_sin_c
   LedsTurnOn (5);
   LedsTurnOff (3);
   TEST_ASSERT_EQUAL_HEX16 (1 << 4, port);
+
+}
+
+
+void test_encender_un_led_fuera_de_rango_y_comprobar_que_se_genera_un_error (void) {
+
+  //RegistrarMensaje_Expect (ALERTA, "LedsTurnOn", 0, "El led no es valido");
+  //RegistrarMensaje_IgnoreArg_linea ();
+
+  RegistrarMensaje_ExpectAnyArgs ();
+  LedsTurnOn (0);
+  TEST_ASSERT_EQUAL_HEX16 (0x0000, port);
+
+  RegistrarMensaje_ExpectAnyArgs ();
+  LedsTurnOn (17);
+  TEST_ASSERT_EQUAL_HEX16 (0x0000, port);
 
 }
 
