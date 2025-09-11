@@ -147,6 +147,17 @@ void test_apagar_todos_los_leds () {
 
 }
 
+
+void test_prender_algunos_leds_mas_de_una_vez_y_verificar_que_sigue_prendido (void) {
+
+  LedsTurnOn (10);
+  LedsTurnOn (7);
+  LedsTurnOn (10);
+  LedsTurnOn (7);
+  TEST_ASSERT_EQUAL_HEX16 ((1 << 9) | (1 << 6), port);
+
+}
+
 /* === End of documentation ==================================================================== */
 
 /** @} End of module definition for doxygen */
