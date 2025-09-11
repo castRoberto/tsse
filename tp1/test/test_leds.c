@@ -35,6 +35,8 @@ SPDX-License-Identifier: MIT
  ** - Consultar el estado de un led prendido fuera de rango
  ** - Consultar el estado de un led apagado
  ** - Consultar el estado de un led apagado fuera de rango
+ ** - Apagar algunos leds mas de una vez y verificar que siguen apagados
+ ** - Prender los leds extremos y apagarlos
  **
  ** \addtogroup name Module denomination
  ** \brief Brief description of the module
@@ -217,6 +219,18 @@ void test_apagar_algunos_leds_mas_de_una_vez_y_verificar_que_siguen_apagados (vo
   LedsTurnOff (12);
   LedsTurnOff (6);
   LedsTurnOff (12);
+  TEST_ASSERT_EQUAL_HEX16 (0x0000, port);
+
+}
+
+
+void test_prender_los_leds_extremos_y_apagarlos (void) {
+
+  LedsTurnOn (1);
+  LedsTurnOn (16);
+  TEST_ASSERT_EQUAL_HEX16 ((1 << 0) | (1 << 15), port);
+  LedsTurnOff (1);
+  LedsTurnOff (16);
   TEST_ASSERT_EQUAL_HEX16 (0x0000, port);
 
 }
