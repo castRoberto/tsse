@@ -30,7 +30,6 @@ SPDX-License-Identifier: MIT
 #include "errores.h"
 
 #include <stdbool.h>
-#include <stdio.h>
 
 /* === Macros definitions ====================================================================== */
 
