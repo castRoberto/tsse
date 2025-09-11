@@ -19,16 +19,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 SPDX-License-Identifier: MIT
 *************************************************************************************************/
 
-/** \brief Brief description of the file
+/** \brief Fichero de pruebas unitarias del modulo de leds
  **
- ** Full file description
+ ** Pruebas a realizar:
+ ** - Iniciar el driver y revisar que todos los leds esten apagados
  **
  ** \addtogroup name Module denomination
  ** \brief Brief description of the module
  ** @{ */
 
 /* === Headers files inclusions =============================================================== */
-
+#include "unity.h"
+#include "leds.h"
 
 /* === Macros definitions ====================================================================== */
 
@@ -45,6 +47,24 @@ SPDX-License-Identifier: MIT
 /* === Private function implementation ========================================================= */
 
 /* === Public function implementation ========================================================== */
+
+void setUp (void) {
+
+}
+
+
+void tearDown (void) {
+
+}
+
+
+void test_al_iniciar_todos_los_leds_deben_apagarse (void) {
+
+  uint16_t port = 0xFFFF;
+  LedsInitDriver (&port);
+  TEST_ASSERT_EQUAL_HEX16 (0x0000, port);
+
+}
 
 /* === End of documentation ==================================================================== */
 
