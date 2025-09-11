@@ -49,6 +49,8 @@ extern "C" {
 
 void LedsInitDriver (uint16_t* port);
 
+void LedsTurnOn (int led);
+
 /* === End of documentation ==================================================================== */
 
 #ifdef __cplusplus

@@ -34,6 +34,8 @@ SPDX-License-Identifier: MIT
 
 /* === Private variable declarations =========================================================== */
 
+static uint16_t* _port; // Direccion del puerto virtual
+
 /* === Private function declarations =========================================================== */
 
 /* === Public variable definitions ============================================================= */
@@ -46,7 +48,15 @@ SPDX-License-Identifier: MIT
 
 void LedsInitDriver (uint16_t* port) {
 
-  *port = 0x0000; // Apago todos los leds
+  _port = port;
+  *_port = 0x0000; // Apago todos los leds
+
+}
+
+
+void LedsTurnOn (int led) {
+
+  *_port = 1 << 2;
 
 }
 

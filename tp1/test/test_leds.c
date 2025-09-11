@@ -23,6 +23,7 @@ SPDX-License-Identifier: MIT
  **
  ** Pruebas a realizar:
  ** - Iniciar el driver y revisar que todos los leds esten apagados
+ ** - Prender un led y verificar que no cambian los otros
  **
  ** \addtogroup name Module denomination
  ** \brief Brief description of the module
@@ -63,6 +64,17 @@ void test_al_iniciar_todos_los_leds_deben_apagarse (void) {
   uint16_t port = 0xFFFF;
   LedsInitDriver (&port);
   TEST_ASSERT_EQUAL_HEX16 (0x0000, port);
+
+}
+
+
+void test_prender_un_led_y_verificar_que_no_cambian_los_otros (void) {
+
+  uint16_t port;
+
+  LedsInitDriver (&port);
+  LedsTurnOn (3);
+  TEST_ASSERT_EQUAL_HEX16 (1 << 2, port);
 
 }
 
