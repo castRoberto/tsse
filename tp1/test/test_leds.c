@@ -25,6 +25,13 @@ SPDX-License-Identifier: MIT
  ** - Iniciar el driver y revisar que todos los leds esten apagados
  ** - Prender un led y verificar que no cambian los otros
  ** - Prender un led cualquiera y apagarlo
+ ** - Prender mas de un led, apagar uno y verificar que el resto siguen sin cambios
+ ** - Encender un led fuera de rango y comprobar que se genera un error
+ ** - Apagar un led fuera de rango y comprobar que se genera un error
+ ** - Prender todos los leds
+ ** - Apagar todos los leds
+ ** - Prender algunos leds mas de una vez y verificar que sigue prendido
+ ** - Consultar el estado de un led prendido
  **
  ** \addtogroup name Module denomination
  ** \brief Brief description of the module
@@ -35,6 +42,8 @@ SPDX-License-Identifier: MIT
 #include "leds.h"
 #include "errores.h"
 #include "mock_errores.h"
+
+#include <stdbool.h>
 
 /* === Macros definitions ====================================================================== */
 
@@ -155,6 +164,26 @@ void test_prender_algunos_leds_mas_de_una_vez_y_verificar_que_sigue_prendido (vo
   LedsTurnOn (10);
   LedsTurnOn (7);
   TEST_ASSERT_EQUAL_HEX16 ((1 << 9) | (1 << 6), port);
+
+}
+
+
+void test_consultar_el_estado_de_un_led_prendido (void) {
+
+  LedsTurnOn (8);
+  bool state = LedsIsOn (8);
+  TEST_ASSERT_EQUAL (true, state);
+
+}
+
+
+void test_consultar_el_estado_de_un_led_prendido_fuera_de_rango (void) {
+
+  RegistrarMensaje_ExpectAnyArgs ();
+  RegistrarMensaje_ExpectAnyArgs ();
+  LedsTurnOn (17);
+  bool state = LedsIsOn (17);
+  TEST_ASSERT_EQUAL (false, state);
 
 }
 

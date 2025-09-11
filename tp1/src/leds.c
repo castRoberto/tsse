@@ -105,6 +105,15 @@ void LedsTurnOffAll (void) {
 
 }
 
+
+bool LedsIsOn (int led) {
+
+  if (!ISLedValid (led)) return false; // Evito que se consulte un led invalido
+
+  return (*_port & LedsToMask (led)) != 0;
+
+}
+
 /* === End of documentation ==================================================================== */
 
 /** @} End of module definition for doxygen */
