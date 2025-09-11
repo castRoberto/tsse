@@ -187,6 +187,26 @@ void test_consultar_el_estado_de_un_led_prendido_fuera_de_rango (void) {
 
 }
 
+
+void test_consultar_el_estado_de_un_led_apagado (void) {
+
+  LedsTurnOff (4);
+  bool state = LedsIsOff (4);
+  TEST_ASSERT_EQUAL (true, state);
+
+}
+
+
+void test_consultar_el_estado_de_un_led_apagado_fuera_de_rango (void) {
+
+  RegistrarMensaje_ExpectAnyArgs ();
+  RegistrarMensaje_ExpectAnyArgs ();
+  LedsTurnOff (0);
+  bool state = LedsIsOff (0);
+  TEST_ASSERT_EQUAL (false, state);
+
+}
+
 /* === End of documentation ==================================================================== */
 
 /** @} End of module definition for doxygen */

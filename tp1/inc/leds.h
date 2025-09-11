@@ -60,6 +60,8 @@ void LedsTurnOffAll (void);
 
 bool LedsIsOn (int led);
 
+bool LedsIsOff (int led);
+
 /* === End of documentation ==================================================================== */
 
 #ifdef __cplusplus

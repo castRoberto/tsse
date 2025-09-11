@@ -30,6 +30,7 @@ SPDX-License-Identifier: MIT
 #include "errores.h"
 
 #include <stdbool.h>
+#include <stdio.h>
 
 /* === Macros definitions ====================================================================== */
 
@@ -111,6 +112,15 @@ bool LedsIsOn (int led) {
   if (!ISLedValid (led)) return false; // Evito que se consulte un led invalido
 
   return (*_port & LedsToMask (led)) != 0;
+
+}
+
+
+bool LedsIsOff (int led) {
+
+  if (!ISLedValid (led)) return false; // Evito que se consulte un led invalido
+
+  return (*_port & LedsToMask (led)) == 0;
 
 }
 
