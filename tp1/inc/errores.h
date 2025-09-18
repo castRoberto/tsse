@@ -40,24 +40,18 @@ extern "C" {
 
 /* === Public macros definitions =============================================================== */
 
-#define Alerta(mensaje) RegistrarMensaje (ALERTA, __func__, __LINE__, mensaje)
-#define Error(mensaje) RegistrarMensaje (ERROR, __func__, __LINE__, mensaje)
-#define Informacion(mensaje) RegistrarMensaje (INFORMACION, __func__, __LINE__, mensaje)
-#define Depuracion(mensaje) RegistrarMensaje (DEPURACION, __func__, __LINE__, mensaje)
+#define Alerta(mensaje)      RegistrarMensaje(ALERTA, __func__, __LINE__, mensaje)
+#define Error(mensaje)       RegistrarMensaje(ERROR, __func__, __LINE__, mensaje)
+#define Informacion(mensaje) RegistrarMensaje(INFORMACION, __func__, __LINE__, mensaje)
+#define Depuracion(mensaje)  RegistrarMensaje(DEPURACION, __func__, __LINE__, mensaje)
 
 /* === Public data type declarations =========================================================== */
 
-typedef enum gravedad_e {
-  ERROR,
-  ALERTA,
-  INFORMACION,
-  DEPURACION
-} gravedad_t;
+typedef enum gravedad_e { ERROR, ALERTA, INFORMACION, DEPURACION } gravedad_t;
 
 /* === Public variable declarations ============================================================ */
 
 /* === Public function declarations ============================================================ */
-
 
 /**
  * \brief Funcion para registrar un mensaje en la biblioteca de errores del sistema
@@ -67,7 +61,7 @@ typedef enum gravedad_e {
  * \param linea Linea de codigo desde donde se registra el mensaje
  * \param mensaje Mensaje a registrar
  */
-void RegistrarMensaje (gravedad_t gravedad, const char* funcion, int linea, const char* mensaje);
+void RegistrarMensaje(gravedad_t gravedad, const char * funcion, int linea, const char * mensaje);
 
 /* === End of documentation ==================================================================== */
 

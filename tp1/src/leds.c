@@ -33,36 +33,34 @@ SPDX-License-Identifier: MIT
 
 /* === Macros definitions ====================================================================== */
 
-#define LEDS_ALL_OFF 0x0000
-#define FIRST_BIT 1
+#define LEDS_ALL_OFF      0x0000
+#define FIRST_BIT         1
 #define LED_TO_BIT_OFFSET 1
-#define LEDS_PRIMER_LED 1
-#define LEDS_ULTIMO_LED 16
+#define LEDS_PRIMER_LED   1
+#define LEDS_ULTIMO_LED   16
 
 /* === Private data type declarations ========================================================== */
 
 /* === Private variable declarations =========================================================== */
 
-static uint16_t* _port; // Direccion del puerto virtual
+static uint16_t * _port; // Direccion del puerto virtual
 
 /* === Private function declarations =========================================================== */
 
-static uint16_t LedsToMask (int led) {
-  return FIRST_BIT << (led - LED_TO_BIT_OFFSET);
+static uint16_t LedsToMask(int led) {
+    return FIRST_BIT << (led - LED_TO_BIT_OFFSET);
 }
 
-
-static bool ISLedValid (int led) {
-  bool result = led >= LEDS_PRIMER_LED && led <= LEDS_ULTIMO_LED;
-  if (!result) {
-    Alerta ("El led no es valido");
-  }
-  return result;
+static bool ISLedValid(int led) {
+    bool result = led >= LEDS_PRIMER_LED && led <= LEDS_ULTIMO_LED;
+    if (!result) {
+        Alerta("El led no es valido");
+    }
+    return result;
 }
 
-
-static bool LedsRawState (int led) {
-  return (*_port & LedsToMask (led)) != LEDS_ALL_OFF;
+static bool LedsRawState(int led) {
+    return (*_port & LedsToMask(led)) != LEDS_ALL_OFF;
 }
 
 /* === Public variable definitions ============================================================= */
@@ -73,59 +71,50 @@ static bool LedsRawState (int led) {
 
 /* === Public function implementation ========================================================== */
 
-void LedsInitDriver (uint16_t* port) {
+void LedsInitDriver(uint16_t * port) {
 
-  _port = port;
-  LedsTurnOffAll ();
-
+    _port = port;
+    LedsTurnOffAll();
 }
 
+void LedsTurnOn(int led) {
 
-void LedsTurnOn (int led) {
+    if (!ISLedValid(led))
+        return; // Evito que se apague un led invalido
 
-  if (!ISLedValid (led)) return; // Evito que se apague un led invalido
-
-  *_port |= LedsToMask (led);
-
+    *_port |= LedsToMask(led);
 }
 
+void LedsTurnOff(int led) {
 
-void LedsTurnOff (int led) {
+    if (!ISLedValid(led))
+        return; // Evito que se apague un led invalido
 
-  if (!ISLedValid (led)) return; // Evito que se apague un led invalido
-
-  *_port &= ~LedsToMask (led);
-
+    *_port &= ~LedsToMask(led);
 }
 
+void LedsTurnOnAll(void) {
 
-void LedsTurnOnAll (void) {
-
-  *_port = ~LEDS_ALL_OFF;
-
+    *_port = ~LEDS_ALL_OFF;
 }
 
+void LedsTurnOffAll(void) {
 
-void LedsTurnOffAll (void) {
-
-  *_port = LEDS_ALL_OFF;
-
+    *_port = LEDS_ALL_OFF;
 }
 
+bool LedsIsOn(int led) {
 
-bool LedsIsOn (int led) {
-
-  if (!ISLedValid (led)) return false; // Un led invalido se considera apagado
-  return LedsRawState(led);
-
+    if (!ISLedValid(led))
+        return false; // Un led invalido se considera apagado
+    return LedsRawState(led);
 }
 
+bool LedsIsOff(int led) {
 
-bool LedsIsOff (int led) {
-
-  if (!ISLedValid (led)) return false; // Un led invalido se considera apagado
-  return LedsRawState(led) == false;
-
+    if (!ISLedValid(led))
+        return false; // Un led invalido se considera apagado
+    return LedsRawState(led) == false;
 }
 
 /* === End of documentation ==================================================================== */

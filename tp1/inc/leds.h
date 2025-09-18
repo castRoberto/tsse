@@ -48,19 +48,19 @@ extern "C" {
 
 /* === Public function declarations ============================================================ */
 
-void LedsInitDriver (uint16_t* port);
+void LedsInitDriver(uint16_t * port);
 
-void LedsTurnOn (int led);
+void LedsTurnOn(int led);
 
-void LedsTurnOff (int led);
+void LedsTurnOff(int led);
 
-void LedsTurnOnAll (void);
+void LedsTurnOnAll(void);
 
-void LedsTurnOffAll (void);
+void LedsTurnOffAll(void);
 
-bool LedsIsOn (int led);
+bool LedsIsOn(int led);
 
-bool LedsIsOff (int led);
+bool LedsIsOff(int led);
 
 /* === End of documentation ==================================================================== */
 
