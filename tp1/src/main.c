@@ -47,10 +47,9 @@ SPDX-License-Identifier: MIT
 
 /* === Public function implementation ========================================================== */
 
-int main (void) {
+int main(void) {
 
-  return 0
-
+    return 0
 }
 
 /* === End of documentation ==================================================================== */

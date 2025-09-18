@@ -68,171 +68,138 @@ static uint16_t port;
 
 /* === Public function implementation ========================================================== */
 
-void setUp (void) {
+void setUp(void) {
 
-  LedsInitDriver (&port);
-
+    LedsInitDriver(&port);
 }
 
-
-void tearDown (void) {
-
+void tearDown(void) {
 }
 
+void test_al_iniciar_todos_los_leds_deben_apagarse(void) {
 
-void test_al_iniciar_todos_los_leds_deben_apagarse (void) {
-
-  uint16_t port = 0xFFFF;
-  LedsInitDriver (&port);
-  TEST_ASSERT_EQUAL_HEX16 (0x0000, port);
-
+    uint16_t port = 0xFFFF;
+    LedsInitDriver(&port);
+    TEST_ASSERT_EQUAL_HEX16(0x0000, port);
 }
 
+void test_prender_un_led_y_verificar_que_no_cambian_los_otros(void) {
 
-void test_prender_un_led_y_verificar_que_no_cambian_los_otros (void) {
-
-  LedsTurnOn (3);
-  TEST_ASSERT_EQUAL_HEX16 (1 << 2, port);
-
+    LedsTurnOn(3);
+    TEST_ASSERT_EQUAL_HEX16(1 << 2, port);
 }
 
+void test_prender_un_led_cualquiera_y_apagarlo(void) {
 
-void test_prender_un_led_cualquiera_y_apagarlo (void) {
-
-  LedsTurnOn (5);
-  LedsTurnOff (5);
-  TEST_ASSERT_EQUAL_HEX16 (0x0000, port);
-
+    LedsTurnOn(5);
+    LedsTurnOff(5);
+    TEST_ASSERT_EQUAL_HEX16(0x0000, port);
 }
 
+void test_prender_mas_de_un_led_apagar_uno_y_verificar_que_el_resto_siguen_sin_cambios(void) {
 
-void test_prender_mas_de_un_led_apagar_uno_y_verificar_que_el_resto_siguen_sin_cambios (void) {
-
-  LedsTurnOn (3);
-  LedsTurnOn (5);
-  LedsTurnOff (3);
-  TEST_ASSERT_EQUAL_HEX16 (1 << 4, port);
-
+    LedsTurnOn(3);
+    LedsTurnOn(5);
+    LedsTurnOff(3);
+    TEST_ASSERT_EQUAL_HEX16(1 << 4, port);
 }
 
+void test_encender_un_led_fuera_de_rango_y_comprobar_que_se_genera_un_error(void) {
 
-void test_encender_un_led_fuera_de_rango_y_comprobar_que_se_genera_un_error (void) {
+    // RegistrarMensaje_Expect (ALERTA, "LedsTurnOn", 0, "El led no es valido");
+    // RegistrarMensaje_IgnoreArg_linea ();
 
-  //RegistrarMensaje_Expect (ALERTA, "LedsTurnOn", 0, "El led no es valido");
-  //RegistrarMensaje_IgnoreArg_linea ();
+    RegistrarMensaje_ExpectAnyArgs();
+    LedsTurnOn(0);
+    TEST_ASSERT_EQUAL_HEX16(0x0000, port);
 
-  RegistrarMensaje_ExpectAnyArgs ();
-  LedsTurnOn (0);
-  TEST_ASSERT_EQUAL_HEX16 (0x0000, port);
-
-  RegistrarMensaje_ExpectAnyArgs ();
-  LedsTurnOn (17);
-  TEST_ASSERT_EQUAL_HEX16 (0x0000, port);
-
+    RegistrarMensaje_ExpectAnyArgs();
+    LedsTurnOn(17);
+    TEST_ASSERT_EQUAL_HEX16(0x0000, port);
 }
 
+void test_apagar_un_led_fuera_de_rango_y_comprobar_que_se_genera_un_error(void) {
 
-void test_apagar_un_led_fuera_de_rango_y_comprobar_que_se_genera_un_error (void) {
+    RegistrarMensaje_ExpectAnyArgs();
+    LedsTurnOff(0);
+    TEST_ASSERT_EQUAL_HEX16(0x0000, port);
 
-  RegistrarMensaje_ExpectAnyArgs ();
-  LedsTurnOff (0);
-  TEST_ASSERT_EQUAL_HEX16 (0x0000, port);
-
-  RegistrarMensaje_ExpectAnyArgs ();
-  LedsTurnOff (17);
-  TEST_ASSERT_EQUAL_HEX16 (0x0000, port);
-
+    RegistrarMensaje_ExpectAnyArgs();
+    LedsTurnOff(17);
+    TEST_ASSERT_EQUAL_HEX16(0x0000, port);
 }
 
+void test_prender_todos_los_leds() {
 
-void test_prender_todos_los_leds () {
-
-  LedsTurnOnAll ();
-  TEST_ASSERT_EQUAL_HEX16 (0xFFFF, port);
-
+    LedsTurnOnAll();
+    TEST_ASSERT_EQUAL_HEX16(0xFFFF, port);
 }
 
+void test_apagar_todos_los_leds() {
 
-void test_apagar_todos_los_leds () {
-
-  LedsTurnOnAll ();
-  LedsTurnOffAll ();
-  TEST_ASSERT_EQUAL_HEX16 (0x0000, port);
-
+    LedsTurnOnAll();
+    LedsTurnOffAll();
+    TEST_ASSERT_EQUAL_HEX16(0x0000, port);
 }
 
+void test_prender_algunos_leds_mas_de_una_vez_y_verificar_que_sigue_prendido(void) {
 
-void test_prender_algunos_leds_mas_de_una_vez_y_verificar_que_sigue_prendido (void) {
-
-  LedsTurnOn (10);
-  LedsTurnOn (7);
-  LedsTurnOn (10);
-  LedsTurnOn (7);
-  TEST_ASSERT_EQUAL_HEX16 ((1 << 9) | (1 << 6), port);
-
+    LedsTurnOn(10);
+    LedsTurnOn(7);
+    LedsTurnOn(10);
+    LedsTurnOn(7);
+    TEST_ASSERT_EQUAL_HEX16((1 << 9) | (1 << 6), port);
 }
 
+void test_consultar_el_estado_de_un_led_prendido(void) {
 
-void test_consultar_el_estado_de_un_led_prendido (void) {
-
-  LedsTurnOn (8);
-  bool state = LedsIsOn (8);
-  TEST_ASSERT_EQUAL (true, state);
-
+    LedsTurnOn(8);
+    bool state = LedsIsOn(8);
+    TEST_ASSERT_EQUAL(true, state);
 }
 
+void test_consultar_el_estado_de_un_led_prendido_fuera_de_rango(void) {
 
-void test_consultar_el_estado_de_un_led_prendido_fuera_de_rango (void) {
-
-  RegistrarMensaje_ExpectAnyArgs ();
-  RegistrarMensaje_ExpectAnyArgs ();
-  LedsTurnOn (17);
-  bool state = LedsIsOn (17);
-  TEST_ASSERT_EQUAL (false, state);
-
+    RegistrarMensaje_ExpectAnyArgs();
+    RegistrarMensaje_ExpectAnyArgs();
+    LedsTurnOn(17);
+    bool state = LedsIsOn(17);
+    TEST_ASSERT_EQUAL(false, state);
 }
 
+void test_consultar_el_estado_de_un_led_apagado(void) {
 
-void test_consultar_el_estado_de_un_led_apagado (void) {
-
-  LedsTurnOff (4);
-  bool state = LedsIsOff (4);
-  TEST_ASSERT_EQUAL (true, state);
-
+    LedsTurnOff(4);
+    bool state = LedsIsOff(4);
+    TEST_ASSERT_EQUAL(true, state);
 }
 
+void test_consultar_el_estado_de_un_led_apagado_fuera_de_rango(void) {
 
-void test_consultar_el_estado_de_un_led_apagado_fuera_de_rango (void) {
-
-  RegistrarMensaje_ExpectAnyArgs ();
-  RegistrarMensaje_ExpectAnyArgs ();
-  LedsTurnOff (0);
-  bool state = LedsIsOff (0);
-  TEST_ASSERT_EQUAL (false, state);
-
+    RegistrarMensaje_ExpectAnyArgs();
+    RegistrarMensaje_ExpectAnyArgs();
+    LedsTurnOff(0);
+    bool state = LedsIsOff(0);
+    TEST_ASSERT_EQUAL(false, state);
 }
 
+void test_apagar_algunos_leds_mas_de_una_vez_y_verificar_que_siguen_apagados(void) {
 
-void test_apagar_algunos_leds_mas_de_una_vez_y_verificar_que_siguen_apagados (void) {
-
-  LedsTurnOff (6);
-  LedsTurnOff (12);
-  LedsTurnOff (6);
-  LedsTurnOff (12);
-  TEST_ASSERT_EQUAL_HEX16 (0x0000, port);
-
+    LedsTurnOff(6);
+    LedsTurnOff(12);
+    LedsTurnOff(6);
+    LedsTurnOff(12);
+    TEST_ASSERT_EQUAL_HEX16(0x0000, port);
 }
 
+void test_prender_los_leds_extremos_y_apagarlos(void) {
 
-void test_prender_los_leds_extremos_y_apagarlos (void) {
-
-  LedsTurnOn (1);
-  LedsTurnOn (16);
-  TEST_ASSERT_EQUAL_HEX16 ((1 << 0) | (1 << 15), port);
-  LedsTurnOff (1);
-  LedsTurnOff (16);
-  TEST_ASSERT_EQUAL_HEX16 (0x0000, port);
-
+    LedsTurnOn(1);
+    LedsTurnOn(16);
+    TEST_ASSERT_EQUAL_HEX16((1 << 0) | (1 << 15), port);
+    LedsTurnOff(1);
+    LedsTurnOff(16);
+    TEST_ASSERT_EQUAL_HEX16(0x0000, port);
 }
 
 /* === End of documentation ==================================================================== */
