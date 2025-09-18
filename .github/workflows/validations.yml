@@ -27,6 +27,8 @@ jobs:
         run: pip install gcovr
       - name: Run format Validation
         uses: pre-commit/action@v3.0.0
+        with:
+          extra_args: --config tp1/.pre-commit-config.yaml --all-files
       - name: Run Unit Tests
         run: ceedling clobber gcov:all
       - name: Test Results Report
