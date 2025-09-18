@@ -26,7 +26,7 @@ jobs:
       - name: Install GCov Reporter
         run: pip install gcovr
       - name: Run format Validation
-        run: pre-commit/action@v3.0.0
+        uses: pre-commit/action@v3.0.0
       - name: Run Unit Tests
         run: ceedling clobber gcov:all
       - name: Test Results Report
