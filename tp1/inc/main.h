@@ -46,7 +46,7 @@ extern "C" {
 
 /* === Public function declarations ============================================================ */
 
-int main (void);
+int main(void);
 
 /* === End of documentation ==================================================================== */
 

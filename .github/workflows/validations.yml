@@ -2,7 +2,7 @@ name: Validations
 
 on:
   pull_request:
-    branches: [main]
+    branches: [ "main" ]
 
 permissions:
   contents: read
@@ -26,20 +26,23 @@ jobs:
       - name: Install GCov Reporter
         run: pip install gcovr
       - name: Run format Validation
-        run: pre-commit/action@v3.0.0
+        uses: pre-commit/action@v3.0.0
+        with:
+          extra_args: --config tp1/.pre-commit-config.yaml --all-files
       - name: Run Unit Tests
+        working-directory: tp1
         run: ceedling clobber gcov:all
       - name: Test Results Report
         uses: dorny/test-reporter@v1
         if: success() || failure()
         with:
           name: Ceedling Unit Tests
-          path: build/artifacts/gcov/junit_test_report.xml
+          path: tp1/build/artifacts/gcov/junit_tests_report.xml
           reporter: jest-junit
       - name: Code Coverage Report
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
-          filename: build/artifacts/gcov/gcovr/GcovCoverageCobertura.xml
+          filename: tp1/build/artifacts/gcov/gcovr/GcovCoverageCobertura.xml
           badge: true
           format: markdown
           hide_branche_rate: false
