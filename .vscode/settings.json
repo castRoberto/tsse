@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    ".als.json": "jsonc",
+    "main.h": "c",
+    "priority_queue.h": "c"
+  }
+}

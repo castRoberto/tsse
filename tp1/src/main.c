@@ -49,7 +49,8 @@ SPDX-License-Identifier: MIT
 
 int main(void) {
 
-    return 0
+  return 0;
+
 }
 
 /* === End of documentation ==================================================================== */
