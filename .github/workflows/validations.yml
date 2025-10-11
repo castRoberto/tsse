@@ -25,21 +25,26 @@ jobs:
         run: gem install ceedling
       - name: Install GCov Reporter
         run: pip install gcovr
-      - name: Run format Validation
+
+      # === TP1 ===
+      - name: Run format Validation (TP1)
         uses: pre-commit/action@v3.0.0
         with:
           extra_args: --config tp1/.pre-commit-config.yaml --all-files
-      - name: Run Unit Tests
+
+      - name: Run Unit Tests (TP1)
         working-directory: tp1
         run: ceedling clobber gcov:all
-      - name: Test Results Report
+
+      - name: Test Results Report (TP1)
         uses: dorny/test-reporter@v1
         if: success() || failure()
         with:
           name: Ceedling Unit Tests
           path: tp1/build/artifacts/gcov/junit_tests_report.xml
           reporter: jest-junit
-      - name: Code Coverage Report
+
+      - name: Code Coverage Report (TP1)
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
           filename: tp1/build/artifacts/gcov/gcovr/GcovCoverageCobertura.xml
@@ -50,9 +55,51 @@ jobs:
           indicators: true
           output: both
           thresholds: "75 90"
-      - name: Output to Job Summary
+
+      - name: Output to Job Summary (TP1)
         run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
-      - name: Add Coverage PR Comment
+
+      - name: Add Coverage PR Comment (TP1)
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event_name == 'pull_request'
+        with:
+          recreate: true
+          path: code-coverage-results.md
+
+      # === TP2 ===
+      - name: Run format Validation (TP2)
+        uses: pre-commit/action@v3.0.0
+        with:
+          extra_args: --config tp2/.pre-commit-config.yaml --all-files
+
+      - name: Run Unit Tests (TP2)
+        working-directory: tp2
+        run: ceedling clobber gcov:all
+
+      - name: Test Results Report (TP2)
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Ceedling Unit Tests
+          path: tp2/build/artifacts/gcov/junit_tests_report.xml
+          reporter: jest-junit
+
+      - name: Code Coverage Report (TP2)
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: tp2/build/artifacts/gcov/gcovr/GcovCoverageCobertura.xml
+          badge: true
+          format: markdown
+          hide_branche_rate: false
+          hide_complexity: false
+          indicators: true
+          output: both
+          thresholds: "75 90"
+
+      - name: Output to Job Summary (TP2)
+        run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Add Coverage PR Comment (TP2)
         uses: marocchino/sticky-pull-request-comment@v2
         if: github.event_name == 'pull_request'
         with:

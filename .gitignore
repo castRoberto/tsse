@@ -92,3 +92,4 @@ dkms.conf
 # End of https://www.toptal.com/developers/gitignore/api/c,linux,visualstudiocode
 
 tp1/build
+tp2/build

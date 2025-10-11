@@ -3,6 +3,9 @@ INC_DIR = ./inc
 OUT_DIR = ./build
 OBJ_DIR = $(OUT_DIR)/obj
 
+# Variables de compilación configurables
+CFLAGS ?= -g -Wall -Wextra -pedantic -Werror# -DPQ_DEBUG
+
 SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
 OBJ_FILES = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
 
@@ -12,13 +15,12 @@ OBJ_FILES = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
 
 all: $(OBJ_FILES)
 	@echo Enlazando $@
-	@gcc $(OBJ_FILES) -o $(OUT_DIR)/app.elf -lm
-
+	@gcc $(OBJ_FILES) -o $(OUT_DIR)/app.elf
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@echo Compilando $@
 	@mkdir -p $(OBJ_DIR)
-	@gcc -o $@ -c $< -I $(INC_DIR) -MMD -Wall -Wextra -pedantic -Werror
+	@gcc $(CFLAGS) -o $@ -c $< -I $(INC_DIR) -MMD
 
 clean:
 	@rm -r $(OUT_DIR)

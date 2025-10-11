@@ -34,7 +34,7 @@ SPDX-License-Identifier: MIT
 
 /********************** CPP guard ********************************************/
 #ifdef __cplusplus
-  extern "C" {
+extern "C" {
 #endif
 
 /********************** inclusions *******************************************/
@@ -46,8 +46,10 @@ SPDX-License-Identifier: MIT
 
 typedef enum {
 
-  MIN_QUEUE = 0,
-  MAX_QUEUE
+  PQ_UNKNOWN_PRIORITY_QUEUE = 0,
+
+  PQ_MIN_PRIORITY_QUEUE,
+  PQ_MAX_PRIORITY_QUEUE,
 
 } pq_type_t;
 
@@ -96,7 +98,7 @@ void pq_print_priority_queue (priority_queue_t* pq);
 
 /********************** End of CPP guard *************************************/
 #ifdef __cplusplus
-  }
+}
 #endif
 
 #endif /* __PRIORITY_QUEUE_H__ */

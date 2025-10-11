@@ -12,5 +12,5 @@ IndentCaseLabels: false
 ColumnLimit: 100
 AccessModifierOffset: -4
 FixNamespaceComments: false
-PointerAlignment: Middle
+PointerAlignment: Left
 AlignConsecutiveMacros: AcrossEmptyLines

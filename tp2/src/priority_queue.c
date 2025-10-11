@@ -38,9 +38,10 @@ SPDX-License-Identifier: MIT
 #include <string.h>
 
 /********************** macros and definitions *******************************/
-#define MAX_ELEMENT_INDEX 0
-#define NO_ELEMENTS_IN_QUEUE 0
-#define NULL_VALUE 0
+#define ROOT_INDEX                0
+#define NO_ELEMENTS_IN_QUEUE      0
+#define NULL_VALUE                0
+#define INITIAL_INSERTION_INDEX   0
 
 /********************** internal data declaration ****************************/
 
@@ -54,13 +55,9 @@ static size_t _get_right (size_t index);
 
 static void _swap (priority_queue_t* pq, size_t i, size_t j);
 
-static void _max_heapify (priority_queue_t* pq, size_t index);
+static void _heapify (priority_queue_t* pq, size_t index);
 
-static void _increase_priority (priority_queue_t* pq, size_t index, int16_t priority);
-
-static int _power_of_two (int exp);
-
-static uint16_t _calculate_level (size_t size);
+static void _bubble_up (priority_queue_t* pq, size_t index);
 
 /********************** internal data definition *****************************/
 
@@ -88,6 +85,8 @@ static size_t _get_right (size_t index) {
 
 }
 
+#ifdef PQ_DEBUG
+
 static int _power_of_two (int exp) {
 
   return 1 << exp; // 2^exp
@@ -96,9 +95,14 @@ static int _power_of_two (int exp) {
 
 static uint16_t _calculate_level (size_t size) {
 
-  return (uint16_t) log2 (size);
+  // Implement log2(size) using bitwise operations
+  unsigned level = 0;
+  while (size >>= 1) level++;
+  return level;
 
 }
+
+#endif
 
 
 // Function to swap two elements in an array
@@ -111,78 +115,84 @@ static void _swap (priority_queue_t* pq, size_t i, size_t j) {
 }
 
 
-static bool _should_update_by_order (priority_queue_t* pq,
-                                     size_t current_largest,
-                                     size_t candidate) {
+static bool _should_update_by_order (const pq_node_t* candidate,
+                                     const pq_node_t* parent) {
 
-  return (pq->nodes[candidate].priority ==
-            pq->nodes[current_largest].priority
-          &&
-          pq->nodes[candidate].insertion_index <
-            pq->nodes[current_largest].insertion_index);
+  return (candidate->priority == parent->priority &&
+          candidate->insertion_index < parent->insertion_index);
 
 }
 
 
-static bool _check_update_largest_node (priority_queue_t* pq,
-                                        size_t current_largest,
+static bool _child_better_than_parent (const priority_queue_t* pq,
+                                        size_t parent,
                                         size_t candidate) {
 
-	return (pq->nodes[candidate].priority > pq->nodes[current_largest].priority ||
-			    _should_update_by_order (pq, current_largest, candidate));
+  bool is_better = false;
+
+  if (parent != candidate) {
+
+    const pq_node_t* c = &pq->nodes[candidate]; // Candidate node
+    const pq_node_t* p = &pq->nodes[parent]; // Parent node
+
+    if (PQ_MAX_PRIORITY_QUEUE == pq->type) {
+
+      is_better =
+        (c->priority > p->priority || _should_update_by_order (c, p));
+
+    } else { // MIN_PRIORITY_QUEUE
+
+      is_better =
+        (c->priority < p->priority || _should_update_by_order (c, p));
+
+    }
+
+  }
+
+	return is_better;
 
 }
 
 
-static void _max_heapify (priority_queue_t* pq, size_t index) {
+static void _heapify (priority_queue_t* pq, size_t index) {
 
 	size_t child_left = _get_left (index);
 	size_t child_right = _get_right (index);
-	size_t largest;
+	size_t best = index;
 
-	if (child_left < pq->size && _check_update_largest_node (pq, index, child_left)) {
+	if (child_left < pq->size && _child_better_than_parent (pq, best, child_left)) {
 
-		largest = child_left;
-
-	} else {
-
-		largest = index;
+		best = child_left;
 
 	}
 
-	if (child_right < pq->size && _check_update_largest_node (pq, largest, child_right)) {
+	if (child_right < pq->size && _child_better_than_parent (pq, best, child_right)) {
 
-		largest = child_right;
+		best = child_right;
 
 	}
 
-	if (largest != index) {
+	if (best != index) {
 
-		_swap (pq, index, largest);
-		_max_heapify (pq, largest);
+		_swap (pq, index, best);
+		_heapify (pq, best);
 
 	}
 
 }
 
 
-static void _increase_priority (priority_queue_t* pq, size_t index, int16_t priority) {
+static void _bubble_up (priority_queue_t* pq, size_t index) {
 
-	if (priority > pq->nodes[index].priority) {
+  while (index > 0 && _child_better_than_parent(pq, _get_parent(index), index)) {
 
-		pq->nodes[index].priority = priority;
+    size_t parent = _get_parent(index);
 
-		while (index > 0 && _check_update_largest_node (pq, _get_parent(index), index)) {
+    _swap(pq, index, parent);
 
-			size_t parent = _get_parent(index);
+    index = parent;
 
-			_swap(pq, index, parent);
-
-			index = parent;
-
-		}
-
-	}
+  }
 
 }
 
@@ -192,9 +202,6 @@ priority_queue_t* pq_create (void* memory_pool, size_t capacity, pq_type_t type)
 
 	priority_queue_t* pq = NULL;
 
-	// Suppress unused parameter warning
-	(void)type;
-
 	if (NULL != memory_pool && capacity > NO_ELEMENTS_IN_QUEUE) {
 
 		pq = (priority_queue_t*)memory_pool;
@@ -202,9 +209,9 @@ priority_queue_t* pq_create (void* memory_pool, size_t capacity, pq_type_t type)
 		// Initialize the queue
 		pq->nodes = (pq_node_t*)((char*)memory_pool + sizeof(priority_queue_t));
 		pq->size = NO_ELEMENTS_IN_QUEUE;
-    pq->type = MAX_QUEUE;
+    pq->type = type;
 		pq->capacity = capacity;
-    pq->next_insertion_index = 0;
+    pq->next_insertion_index = INITIAL_INSERTION_INDEX;
 
     memset (pq->nodes, NULL_VALUE, capacity * sizeof(pq_node_t));
 
@@ -222,10 +229,10 @@ bool pq_insert (priority_queue_t* pq, void* data, uint16_t priority) {
 	if (NULL != pq && pq->size < pq->capacity && NULL != data) {
 
     pq->nodes[pq->size].data = data;
-    pq->nodes[pq->size].priority = 0; // - inf
+    pq->nodes[pq->size].priority = priority;
     pq->nodes[pq->size].insertion_index = pq->next_insertion_index++;
 
-    _increase_priority (pq, pq->size, priority);
+    _bubble_up (pq, pq->size);
 
     pq->size++;
 
@@ -242,9 +249,9 @@ void* pq_peek (priority_queue_t* pq) {
 
   void* data = NULL;
 
-  if (NULL != pq && pq->size > 0) {
+  if (NULL != pq && pq->size > NO_ELEMENTS_IN_QUEUE) {
 
-    data = pq->nodes[0].data;
+    data = pq->nodes[ROOT_INDEX].data;
 
   }
 
@@ -257,16 +264,16 @@ void* pq_extract (priority_queue_t* pq) {
 
 	void* data = NULL;
 
-	if (NULL != pq && pq->size > 0) {
+	if (NULL != pq && pq->size > NO_ELEMENTS_IN_QUEUE) {
 
-    data = pq->nodes[MAX_ELEMENT_INDEX].data;
+    data = pq->nodes[ROOT_INDEX].data;
 
-    pq->nodes[MAX_ELEMENT_INDEX] = pq->nodes[pq->size - 1];
+    pq->nodes[ROOT_INDEX] = pq->nodes[pq->size - 1];
     pq->size--;
 
-    if (pq->size > 0) {
+    if (pq->size > NO_ELEMENTS_IN_QUEUE) {
 
-      _max_heapify (pq, 0);
+      _heapify (pq, ROOT_INDEX);
 
     }
 
@@ -283,7 +290,7 @@ bool pq_is_empty (priority_queue_t* pq) {
 
 	if (NULL != pq) {
 
-		is_empty = pq->size == 0;
+		is_empty = pq->size == NO_ELEMENTS_IN_QUEUE;
 
 	}
 
@@ -308,6 +315,8 @@ size_t pq_size (priority_queue_t* pq) {
 
 
 void pq_print_priority_queue (priority_queue_t* pq) {
+
+#ifdef PQ_DEBUG
 
 	if (NULL != pq) {
 
@@ -364,6 +373,13 @@ void pq_print_priority_queue (priority_queue_t* pq) {
 		printf("Queue empty or NULL");
 
 	}
+
+#else
+
+  // Debug functionality is disabled
+  (void)pq; // Suppress unused parameter warning
+
+#endif
 
 }
 
