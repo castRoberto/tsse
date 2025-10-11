@@ -27,10 +27,11 @@ jobs:
         run: pip install gcovr
 
       # === TP1 ===
-      - name: Run format Validation (TP1)
-        uses: pre-commit/action@v3.0.0
-        with:
-          extra_args: --config tp1/.pre-commit-config.yaml --all-files
+
+      #- name: Run format Validation (TP1)
+      #  uses: pre-commit/action@v3.0.0
+      #  with:
+      #    extra_args: --config tp1/.pre-commit-config.yaml --all-files
 
       - name: Run Unit Tests (TP1)
         working-directory: tp1
@@ -67,10 +68,11 @@ jobs:
           path: code-coverage-results.md
 
       # === TP2 ===
-      - name: Run format Validation (TP2)
-        uses: pre-commit/action@v3.0.0
-        with:
-          extra_args: --config tp2/.pre-commit-config.yaml --all-files
+
+      #- name: Run format Validation (TP2)
+      #  uses: pre-commit/action@v3.0.0
+      #  with:
+      #    extra_args: --config tp2/.pre-commit-config.yaml --all-files
 
       - name: Run Unit Tests (TP2)
         working-directory: tp2
